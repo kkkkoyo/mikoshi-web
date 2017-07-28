@@ -8,11 +8,12 @@
   },
   "engines": {
     "node": "v6.10.X",
-    "npm":"5.3.X"
+    "npm": "5.3.X"
   },
   "author": "kkkkoyo",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.15.3",
     "socket.io": "^2.0.3"
   }
 }
