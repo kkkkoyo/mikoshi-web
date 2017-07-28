@@ -7,7 +7,9 @@
     "test": "node chat.js"
   },
   "engines": {
-    "node": "6.10.1"
+    "node": "v6.10.X",
+    "npm":"5.3.X"
+    
   },
   "author": "kkkkoyo",
   "license": "ISC",
