@@ -4,12 +4,11 @@
   "description": "ousen mikoshi chat",
   "main": "chat.js",
   "scripts": {
-    "test": "node chat.js"
+    "start": "node chat.js"
   },
   "engines": {
     "node": "v6.10.X",
     "npm":"5.3.X"
-    
   },
   "author": "kkkkoyo",
   "license": "ISC",
