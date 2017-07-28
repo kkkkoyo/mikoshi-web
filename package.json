@@ -1,0 +1,17 @@
+{
+  "name": "heroku-chat",
+  "version": "1.0.0",
+  "description": "ousen mikoshi chat",
+  "main": "chat.js",
+  "scripts": {
+    "test": "node chat.js"
+  },
+  "engines": {
+    "node": "6.10.1"
+  },
+  "author": "kkkkoyo",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.0.3"
+  }
+}
