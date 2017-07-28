@@ -8,8 +8,8 @@
   <script type="text/javascript">
 
 //  var s = io.connect(); //リモート
-  var s = io.connect('http://localhost:3000'); //ローカル
-//    var s = io.connect('http://192.168.0.7:3000'); // 自分の作成した環境へ接続
+//  var s = io.connect('http://localhost:3000'); //ローカル
+    var s = io.connect('https://ousen26sujo.herokuapp.com/'); // 自分の作成した環境へ接続
 
   //サーバから受け取るイベント
   s.on("connect", function () {});  // 接続時
