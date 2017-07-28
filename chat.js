@@ -9,10 +9,10 @@ var userCnt = {
 	}
 
 //ルートディレクトリにアクセスした時に動く処理
-// app.get('/', function(req, res) {
-// 	//index.htmlに遷移する
-// 	res.sendFile(__dirname + '/index.html');
-// });
+app.get('/', function(req, res) {
+	//index.htmlに遷移する
+	res.sendFile(__dirname + '/index.html');
+});
 
 //socket.ioに接続された時に動く処理
 io.on('connection', function(socket) {
