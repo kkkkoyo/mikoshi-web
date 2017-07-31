@@ -36,7 +36,10 @@ io.on('connection', function(socket) {
 	socket.on('message', function(msj) {
 		//io.sockets.in(channel).emit('message', msj, socket.id);
 		console.log(msj);
-		io.sockets.emit("S_to_C_message", {value:msj.value});
+
+		io.sockets.emit("S_to_C_message", {
+			value:msj
+		});
 
 	});
 
