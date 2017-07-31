@@ -1,81 +1,32 @@
-var express = require('express');
+var express = require("express");
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var POST = process.env.PORT || 8080;
-var userCnt = {
-		a : 0,
-		b : 0
-	}
+var http = require("http");
+var socketio = require("socket.io")(http);
+var fs = require("fs");
 
-//ルートディレクトリにアクセスした時に動く処理
-app.get('/', function(req, res) {
-	//index.htmlに遷移する
-	res.sendFile(__dirname + '/index.html');
-});
+var server = http.createServer(function(req, res) {
+     res.writeHead(200, {"Content-Type":"text/html"});
+     var output = fs.readFileSync("./index.html", "utf-8");
+     res.end(output);
+}).listen(process.env.VMC_APP_PORT || 3000);
 
-//socket.ioに接続された時に動く処理
-io.on('connection', function(socket) {
-	//接続時に振られた一意のIDをコンソールに表示
-	console.log('%s さんが接続しました。', socket.id);
+var io = socketio.listen(server);
 
-	var channel = 'A';//デフォルトのチャンネル
-	socket.join(channel);//Roomを初期化するらしい
-	userCnt.a++;//アクセス時はデフォルトのチャンネルなので、そのユーザをカウント
-	io.emit('user cnt', userCnt);//全ユーザ上のユーザ数を更新
+io.sockets.on("connection", function (socket) {
 
-	//「ようこそ」と「ID」を自分の画面だけに表示
-	socket.emit('welcome');
-	socket.emit('get id', socket.id);
+  socket.on("C_to_S_message", function (data) {
+    io.sockets.emit("S_to_C_message", {value:data.value});
+  });
 
-	//接続時に同じチャンネルの人に入室を伝える
-	socket.broadcast.to(channel).emit('message', socket.id + 'さんが入室しました！', 'system');
+ // これは後で利用する
+ socket.on("beep" , function (data) {
+  io.sockets.emit("S_to_C_message",{value:"beep_test"});
+ });
 
-	//messageイベントで動く
-	//同じチャンネルの人にメッセージを送る
-	socket.on('message', function(msj) {
-		io.sockets.in(channel).emit('message', msj, socket.id);
-	});
+  socket.on("C_to_S_broadcast", function (data) {
+    socket.broadcast.emit("S_to_C_message", {value:data.value});
+  });
 
-	//接続が切れた時に動く
-	//接続が切れたIDを全員に表示
-	socket.on('disconnect', function(e) {
-		console.log('%s さんが退室しました。', socket.id);
-		if (channel === 'A') {
-			userCnt.a--;
-
-		} else {
-			userCnt.b--;
-		}
-		//アクティブユーザを更新
-		io.emit('user cnt', userCnt);
-	});
-
-	//チャンネルを変えた時に動く
-	//今いるチャンネルを出て、選択されたチャンネルに移動する
-	socket.on('change channel', function(newChannel) {
-		socket.broadcast.to(channel).emit('message', socket.id + 'さんが退室しました！', 'system');//ルーム内の自分以外
-		if (newChannel === 'A') {
-			++userCnt.a;
-			if (userCnt.b > 0) {
-				--userCnt.b;
-			}
-		} else {
-			++userCnt.b;
-			if (userCnt.a > 0) {
-				--userCnt.a;
-			}
-		}
-		io.emit('user cnt', userCnt);
-		socket.leave(channel); //チャンネルを去る
-		socket.join(newChannel); //選択された新しいチャンネルのルームに入る
-		channel = newChannel; //今いるチャンネルを保存
-		socket.emit('change channel', channel); //チャンネルを変えたこと自分に送信
-		socket.broadcast.to(channel).emit('message', socket.id + 'さんが入室しました！', 'system');//ルーム内の自分以外
-	});
-});
-
-//接続待ち状態になる
-http.listen(POST, function() {
-	console.log('接続開始：', POST);
+  socket.on("disconnect", function () {
+  });
 });
