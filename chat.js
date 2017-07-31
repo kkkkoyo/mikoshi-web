@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express();
 var http = require("http");
-var socketio = require("socket.io")(http);
+var socketio = require("socket.io");
 var fs = require("fs");
 
 var server = http.createServer(function(req, res) {
