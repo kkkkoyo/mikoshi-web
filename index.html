@@ -1,43 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-    <meta charset="utf-8">
-    <title>簡単なチャットアプリ</title>
-</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>heroku</title>
+<style>
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+body {
+	font-family: Verdana;
+}
+ul {
+	list-style-type: none;
+	padding: 20px;
+	background: #000;
+	color: white;
+}
+#controls {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	padding: 20px;
+	display: block;
+	width: 100%;
+}
+#controls #msj {
+	float: left;
+	width: 78%;
+	display: block;
+	padding: 20px;
+	border-radius: 5px;
+}
+#controls #btn {
+	float: right;
+	width: 20%;
+	height: 57px;
+	display: block;
+	background: white;
+	border: 1px solid #aaa;
+	font-size: 1.4em;
+	border-radius: 5px;
+}
+#controls #channel {
+	display: block;
+	width: 100%;
+	font-size: 1.2em;
+	padding: 20px;
+	background: white;
+	margin-bottom: 10px;
+	height: 45px;
+}
+#info {
+	padding: 15px 10px;
+	background: #efefef;
+}
+#user_name p,
+#user_cnt p {
+	display: inline-block;
+}
+</style>
+<script src="/socket.io/socket.io.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.js"></script>
 </head>
-
 <body>
-<div>
-    <input type="text" id="textArea"></input>
-    <button id="sendData">送信</button>
-    <p id="returnData"></p>
+<script>
+<!-- サーバー側とつなぐため -->
+var socket = io();
 
-</div>
+$(function() {
+	<!-- 送信されたときの処理  -->
+	$('form').submit(function() {
+		<!-- メッセージを取得 -->
+		var mensaje = $('#msj').val();
 
-<!-- まずはコンテンツを表示させてからjavascriptを読み込む -->
-<script src = "/socket.io/socket.io.js"></script>
-<script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js">
-     var socket = io.connect('http://ousen26sujo.herokuapp.com/');
-     document.querySelector('#sendData').addEventListener('click', function () {
-         console.log('送信');
-         socket.emit('sendData',$('#textArea')[0].value);
-     },false);;
+		<!-- メッセージがなければ終了 -->
+		if (mensaje === '') return false;
 
-    //サーバからデータを受信した時の処理
-    socket.on('returnData', function (message) {
-        console.log('return:' + message);
-        var elem = document.createElement('div');
-        elem.textContent = message;
-        $('#returnData')[0].appendChild(elem);;
-    });
+		<!-- メッセージを送信 -->
+		socket.emit('message', mensaje);
 
-    //サーバに接続している誰かが接続を切った時
-    // dataには，JSONで{value:"user disconnected"}が送られてくる
-     socket.on("message", function (data) {
-         console.log(data["value"]);
-     });
+		<!-- メッセージの中身を空にしえフォーカスする -->
+		$('#msj').val('').focus();
+		return false;
+	});
 
+	<!-- チャンネルを変えた時の処理 -->
+	$('#channel').on('change', function() {
+		<!-- チャンネル変更する -->
+		//socket.emit('change channel', $('#channel').val());
+	});
+});
 
+<!--ここで作ったイベント名でサーバーサイドの処理を紐付ける-->
+socket.on('welcome', function() {
+	<!-- 取得したメッセージをulに追加 -->
+	$('#message').append($('<li>').text('ようこそ！！'));
+});
+
+socket.on('user cnt', function(cnt) {
+	<!-- 取得したメッセージをulに追加 -->
+	$('#user_cnt p').html('').text("(A :" + cnt.a +"人) (B :" + cnt.b + "人)");
+});
+
+socket.on('message', function(msj, id) {
+	<!-- 取得したメッセージをulに追加 -->
+	$('#message').append($('<li>').text(id + " : " + msj));
+});
+
+socket.on('change channel', function(channel) {
+	<!-- チャンネルが変わったことをメッセージで表示 -->
+	$('#message').html('').append($('<li>').text('「チャンネル' + channel + '」に変更されました!'));
+});
+
+socket.on('get id', function(id) {
+	<!-- チャンネルが変わったことをメッセージで表示 -->
+	$('#user_name p').html('').text(id);
+});
 </script>
+  <div id="info">
+    <div id="user_name">あなたのID&nbsp;:&nbsp;<p></p></div>
+    <div id="user_cnt">アクティブユーザ&nbsp;:&nbsp;<p></p></div>
+  </div>
+  <ul id="message"></ul>
+  <div id="controls">
+    <form action="">
+    <select name="channel" id="channel">
+      <option value="A">チャンネルA</option>
+      <option value="B">チャンネルB</option>
+    </select>
+    <input type="text" id="msj" placeholder="メッセージを入力してください...">
+    <input type="submit" id="btn" value="送信">
+    </form>
+ </div>
 </body>
 </html>

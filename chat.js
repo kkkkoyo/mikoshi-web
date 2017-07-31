@@ -1,58 +1,84 @@
-//httpを読み込む
-var http = require('http');
-//フレームワークexpressを読み込む
 var express = require('express');
-//通信のやり取りを行うsocket.ioの読み込み
-var socketIO = require('socket.io');
-//portの設定 3000かherokuで準備されているprocess.env.PORTを使用
-var port = process.env.PORT || 3000;
-//サーバを起動
-var app = express.createServer();
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+var POST = process.env.PORT || 8080;
+var userCnt = {
+		a : 0,
+		b : 0
+	}
 
-//アクセスした時に表示する内容を設定
-app.get('/', function (req, res) {
-     //index.htmlファイルを読み込む
-     res.sendfile(__dirname + '/index.html');
- //    res.send('Hello, World');
+//ルートディレクトリにアクセスした時に動く処理
+app.get('/', function(req, res) {
+	//index.htmlに遷移する
+	res.sendFile(__dirname + '/index.html');
 });
 
-//ルートディレクトリの設定
-app.configure(function () {
-    app.use(express.static(__dirname));
+//socket.ioに接続された時に動く処理
+io.on('connection', function(socket) {
+	//接続時に振られた一意のIDをコンソールに表示
+	//console.log('%s さんが接続しました。', socket.id);
+
+	var channel = 'A';//デフォルトのチャンネル
+	//socket.join(channel);//Roomを初期化するらしい
+	//userCnt.a++;//アクセス時はデフォルトのチャンネルなので、そのユーザをカウント
+	//io.emit('user cnt', userCnt);//全ユーザ上のユーザ数を更新
+
+	//「ようこそ」と「ID」を自分の画面だけに表示
+	//socket.emit('welcome');
+	//socket.emit('get id', socket.id);
+
+	//接続時に同じチャンネルの人に入室を伝える
+	//socket.broadcast.to(channel).emit('message', socket.id + 'さんが入室しました！', 'system');
+
+	//messageイベントで動く
+	//同じチャンネルの人にメッセージを送る
+	socket.on('message', function(msj) {
+		//io.sockets.in(channel).emit('message', msj, socket.id);
+		console.log(msj);
+		io.sockets.emit("S_to_C_message", {value:msj.value});
+
+	});
+
+	//接続が切れた時に動く
+	//接続が切れたIDを全員に表示
+	socket.on('disconnect', function(e) {
+		//console.log('%s さんが退室しました。', socket.id);
+		// if (channel === 'A') {
+		// 	userCnt.a--;
+		//
+		// } else {
+		// 	userCnt.b--;
+		// }
+		//アクティブユーザを更新
+		io.emit('user cnt', userCnt);
+	});
+
+	//チャンネルを変えた時に動く
+	//今いるチャンネルを出て、選択されたチャンネルに移動する
+	// socket.on('change channel', function(newChannel) {
+	// 	socket.broadcast.to(channel).emit('message', socket.id + 'さんが退室しました！', 'system');//ルーム内の自分以外
+	// 	if (newChannel === 'A') {
+	// 		++userCnt.a;
+	// 		if (userCnt.b > 0) {
+	// 			--userCnt.b;
+	// 		}
+	// 	} else {
+	// 		++userCnt.b;
+	// 		if (userCnt.a > 0) {
+	// 			--userCnt.a;
+	// 		}
+	// 	}
+	// 	io.emit('user cnt', userCnt);
+	// 	socket.leave(channel); //チャンネルを去る
+	// 	socket.join(newChannel); //選択された新しいチャンネルのルームに入る
+	// 	channel = newChannel; //今いるチャンネルを保存
+	// 	socket.emit('change channel', channel); //チャンネルを変えたこと自分に送信
+	// 	socket.broadcast.to(channel).emit('message', socket.id + 'さんが入室しました！', 'system');//ルーム内の自分以外
+	// });
 });
 
-//ポート番号の付与
-app.listen(port, function () {
-    console.log('Listening on ' + port);
+//接続待ち状態になる
+http.listen(POST, function() {
+	console.log('接続開始：', POST);
 });
-
-var io = socketIO.listen(app);
-
-//設定
-io.configure(function () {
-   //HerokuではWebSocketがまだサポートされていない？ので、以下の設定が必要
-    io.set("transports", ["xhr-polling"]);
-    io.set("polling duration", 10);
-
-    // socket.ioのログ出力を抑制する
-    io.set('log level', 1);
-});
-
-io.sockets.on('connection', function (socket) {
-        console.log('接続：'+ socket.id);
-        socket.on('sendData', function(message){
-            console.log('データの受信');
-            console.log(message);
-             // 全ユーザーにメッセージを送る
-            io.sockets.emit('returnData', message);
-        });
-
-         socket.on("disconnect", function () {
-             //切断した人のsocket.idを表示する
-             console.log('切断：' + socket.id);
-             // 全ユーザーにメッセージを送る
-             io.sockets.emit("message", {"value":"user disconnected"});
-         });
-
-
-}); 
