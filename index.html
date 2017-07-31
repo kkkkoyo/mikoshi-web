@@ -1,59 +1,44 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>node.js chat</title>
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script type="text/javascript">
-
-  var s = io();
-//  var s = io.connect(); //リモート
-//  var s = io.connect('http://localhost:3000'); //ローカル
-//   var s = io.connect('http://ousen26sujo.herokuapp.com/'); // 自分の作成した環境へ接続
-
-  //サーバから受け取るイベント
-  s.on("connect", function () {});  // 接続時
-  s.on("disconnect", function (client) {});  // 切断時
-  s.on("S_to_C_message", function (data) {
-    addMessage(data.value);
-  });
-
-  //クライアントからイベント送信（イベント名は自由に設定できます）
-  function sendMessage() {
-    var msg = $("#message").val(); //取得
-    $("#message").val(""); //空白にする
-    s.emit("C_to_S_message", {value:msg}); //サーバへ送信
-  }
-
-  function sendBroadcast() {
-    var msg = $("#message").val(); //取得
-    $("#message").val(""); //空白にする
-    s.emit("C_to_S_broadcast", {value:msg}); // サーバへ送信
-  }
-
-  //jqueryでメッセージを追加
-  function addMessage (value,color,size) {
-    var msg = value.replace( /[!@$%<>'"&|]/g, '' ); //タグ記号とかいくつか削除
-    $("#msg_list").prepend("<div class='msg'>" + msg + "</div>");
-  }
-
-  </script>
-  <style>
-    *{
-      font-size:30px;
-      margin:0;
-      padding:0;
-    }
-  </style>
+    <meta charset="utf-8">
+    <title>簡単なチャットアプリ</title>
+</script>
 </head>
+
 <body>
-  <div id="msg_list" style="height:300px; overflow:auto;"></div>
-  <form action="" method="post" onsubmit="return false;">
-    <input type="text" class="text" style="width:95%; padding:10px" id="message"/>
-    <input type="submit" class="button" style="padding:10px" onclick="sendMessage();" value="みんなに送信" />
-    <input type="submit" class="button" style="padding:10px" onclick="sendBroadcast();" value="自分以外に送信" />
-  </form>
+<div>
+    <input type="text" id="textArea"></input>
+    <button id="sendData">送信</button>
+    <p id="returnData"></p>
+
 </div>
+
+<!-- まずはコンテンツを表示させてからjavascriptを読み込む -->
+<script src = "/socket.io/socket.io.js"></script>
+<script src = "http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js">
+<script>
+     var socket = io.connect('http://ousen26sujo.herokuapp.com/');
+     document.querySelector('#sendData').addEventListener('click', function () {
+         console.log('送信');
+         socket.emit('sendData',$('#textArea')[0].value);
+     },false);;
+
+    //サーバからデータを受信した時の処理
+    socket.on('returnData', function (message) {
+        console.log('return:' + message);
+        var elem = document.createElement('div');
+        elem.textContent = message;
+        $('#returnData')[0].appendChild(elem);;
+    });
+
+    //サーバに接続している誰かが接続を切った時
+    // dataには，JSONで{value:"user disconnected"}が送られてくる
+     socket.on("message", function (data) {
+         console.log(data["value"]);
+     });
+
+
+</script>
 </body>
 </html>
