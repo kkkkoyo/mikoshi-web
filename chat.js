@@ -49,7 +49,13 @@ io.on('connection', function(socket) {
 		});
 
 	});
+	socket.on('btn1', function() {
+		//io.sockets.in(channel).emit('message', msj, socket.id);
+		console.log("btn1");
 
+
+
+	});
 	//接続が切れた時に動く
 	//接続が切れたIDを全員に表示
 	socket.on('disconnect', function(e) {

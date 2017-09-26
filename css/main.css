@@ -29,7 +29,6 @@ ul {
 }
 #controls {
 	position: absolute;
-	bottom: 0px;
 	left: 0px;
 	padding: 20px;
 	display: block;
@@ -97,7 +96,6 @@ h4 {
 h5 {
 	font-size: 14px;
 	color: #2d3033;
-	text-transform: uppercase;
 	font-weight: 700;
 }
 .btn {

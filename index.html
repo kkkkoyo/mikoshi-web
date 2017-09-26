@@ -36,6 +36,10 @@ $(function() {
 		$('#msj').val('').focus();
 		return false;
 	});
+	$('btn_1').button(function() {
+		console.log("ok!");
+		socket.emit('btn1');
+	});
 
 	<!-- チャンネルを変えた時の処理 -->
 	$('#channel').on('change', function() {
@@ -77,10 +81,10 @@ socket.on('get id', function(id) {
 		<div class="header-content clearfix"> <a class="logo" href="#">sujo.jp</a>
 			<nav class="navigation" role="navigation">
 				<ul class="primary-nav">
-					<li><a href="#inner-description">About Me</a></li>
-					<li><a href="#works">works</a></li>
-					<li><a href="#hireme">Contact</a></li>
-					<li><a href="#">hatena blog</a></li>
+					<li><a href="#inner-description">1</a></li>
+					<li><a href="#works">2</a></li>
+					<li><a href="#hireme">3</a></li>
+					<li><a href="#">4</a></li>
 				</ul>
 			</nav>
 			<a href="#" class="nav-toggle">Menu<span></span></a> </div>
@@ -99,23 +103,52 @@ socket.on('get id', function(id) {
 
 </section>
 
-
-
   <div id="info">
-    <div id="user_name">あなたのID&nbsp;:&nbsp;<p></p></div>
-    <div id="user_cnt">アクティブユーザ&nbsp;:&nbsp;<p></p></div>
+    <p>あああああああああああああああああああああああああああ</p>
+		<h5>いいいいいいいいいい</h5>
   </div>
   <ul id="message"></ul>
+
   <div id="controls">
     <form action="">
-    <select name="channel" id="channel">
-      <option value="A">チャンネルA</option>
-      <option value="B">チャンネルB</option>
-    </select>
     <input type="text" id="msj" placeholder="メッセージを入力してください...">
     <input type="submit" id="btn" value="送信">
     </form>
+		<button type="button" class="btn btn-default" id ="btn_1">Default</button>
+
  </div>
+ <section id="inner-description" class="section inner-description">
+	 <div class="container">
+		 <h1>Member</h1>
+		 <div class="col-md-3 col-md-offset-2 text-center">
+			 <h1>Koyo Arai(B4)</h1>
+
+			 <img src="img/1.jpg" alt="Mafolio">
+			 <h5>Planning/programming/design</h5>
+			 <p><a class="btn btn-social btn-fb" href="#" role="button"><i class="fa fa-facebook left"></i> Facebook</a></p>
+			 <p> <a class="btn btn-ins" href="#" role="button"><i class="fa fa-instagram left"></i>Instagram</a></p>
+		 </div>
+
+		 <div class="col-md-3 col-md-offset-2 text-center">
+			 <h1>Masaki Sugawara(B4)</h1>
+
+			 <img src="img/2.jpg" alt="Mafolio">
+			 <h5>programming</h5>
+			 <p><a class="btn btn-social btn-fb" href="#" role="button"><i class="fa fa-facebook left"></i> Facebook</a></p>
+		 </div>
+
+		 <div class="col-md-3 col-md-offset-2 text-center">
+			 <h1>Ryota Morohashi(B2)</h1>
+
+			 <img src="img/3.jpg" alt="Mafolio">
+			 <h5>programming</h5>
+			 <p><a class="btn btn-social btn-fb" href="#" role="button"><i class="fa fa-facebook left"></i> Facebook</a></p>
+			 <p><a class="btn btn-social btn-tw" href="#" role="button"><i class="fa fa-twitter left"></i> Twitter</a></p>
+
+		 </div>
+	 </div>
+ </section>
+
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
  <script src="js/bootstrap.min.js"></script>
  <script src="js/jquery.fancybox.pack.js"></script>
