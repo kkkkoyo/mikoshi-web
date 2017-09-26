@@ -1,67 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
+<html class="no-js" lang="">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>heroku</title>
-<style>
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-}
-body {
-	font-family: Verdana;
-}
-ul {
-	list-style-type: none;
-	padding: 20px;
-	background: #000;
-	color: white;
-}
-#controls {
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	padding: 20px;
-	display: block;
-	width: 100%;
-}
-#controls #msj {
-	float: left;
-	width: 78%;
-	display: block;
-	padding: 20px;
-	border-radius: 5px;
-}
-#controls #btn {
-	float: right;
-	width: 20%;
-	height: 57px;
-	display: block;
-	background: white;
-	border: 1px solid #aaa;
-	font-size: 1.4em;
-	border-radius: 5px;
-}
-#controls #channel {
-	display: block;
-	width: 100%;
-	font-size: 1.2em;
-	padding: 20px;
-	background: white;
-	margin-bottom: 10px;
-	height: 45px;
-}
-#info {
-	padding: 15px 10px;
-	background: #efefef;
-}
-#user_name p,
-#user_cnt p {
-	display: inline-block;
-}
-</style>
+<title>ousen_sj</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/jquery.fancybox.css">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/responsive.css">
+<link rel="stylesheet" href="css/animate.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 <script src="/socket.io/socket.io.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.js"></script>
 </head>
@@ -120,6 +70,37 @@ socket.on('get id', function(id) {
 	$('#user_name p').html('').text(id);
 });
 </script>
+
+<section class="banner" role="banner">
+	<header id="header">
+		<!-- navigation section  -->
+		<div class="header-content clearfix"> <a class="logo" href="#">sujo.jp</a>
+			<nav class="navigation" role="navigation">
+				<ul class="primary-nav">
+					<li><a href="#inner-description">About Me</a></li>
+					<li><a href="#works">works</a></li>
+					<li><a href="#hireme">Contact</a></li>
+					<li><a href="#">hatena blog</a></li>
+				</ul>
+			</nav>
+			<a href="#" class="nav-toggle">Menu<span></span></a> </div>
+		<!-- navigation section  -->
+	</header>
+
+	<!-- banner text -->
+	<div class="container">
+		<div class="col-md-10 col-md-offset-1">
+			<div class="banner-text text-center">
+				<h1>数理情報工学科 神輿</h1>
+				<!-- banner text -->
+			</div>
+		</div>
+	</div>
+
+</section>
+
+
+
   <div id="info">
     <div id="user_name">あなたのID&nbsp;:&nbsp;<p></p></div>
     <div id="user_cnt">アクティブユーザ&nbsp;:&nbsp;<p></p></div>
@@ -135,5 +116,12 @@ socket.on('get id', function(id) {
     <input type="submit" id="btn" value="送信">
     </form>
  </div>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+ <script src="js/bootstrap.min.js"></script>
+ <script src="js/jquery.fancybox.pack.js"></script>
+ <script src="js/jquery.waypoints.min.js"></script>
+ <script src="js/retina.min.js"></script>
+ <script src="js/modernizr.js"></script>
+ <script src="js/main.js"></script>
 </body>
 </html>

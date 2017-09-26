@@ -13,6 +13,11 @@ app.get('/', function(req, res) {
 	//index.htmlに遷移する
 	res.sendFile(__dirname + '/index.html');
 });
+//nodeからcss呼び出し
+app.use('/css', express.static('css'));
+//nodeからimg呼び出し
+app.use('/img', express.static('img'));
+
 
 //socket.ioに接続された時に動く処理
 io.on('connection', function(socket) {
