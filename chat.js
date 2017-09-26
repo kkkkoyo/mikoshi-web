@@ -17,6 +17,8 @@ app.get('/', function(req, res) {
 app.use('/css', express.static('css'));
 //nodeからimg呼び出し
 app.use('/img', express.static('img'));
+app.use('/js', express.static('js'));
+app.use('/php', express.static('php'));
 
 
 //socket.ioに接続された時に動く処理
