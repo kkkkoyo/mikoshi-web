@@ -36,13 +36,14 @@ $(function() {
 		$('#msj').val('').focus();
 		return false;
 	});
-	$('btn_1').button(function() {
+	$('#btn_1').click(function() {
 		console.log("ok!");
 		socket.emit('btn1');
 	});
 
 	<!-- チャンネルを変えた時の処理 -->
 	$('#channel').on('change', function() {
+		console.log("ate");
 		<!-- チャンネル変更する -->
 		//socket.emit('change channel', $('#channel').val());
 	});
@@ -108,13 +109,15 @@ socket.on('get id', function(id) {
 		<h5>いいいいいいいいいい</h5>
   </div>
   <ul id="message"></ul>
-
   <div id="controls">
     <form action="">
     <input type="text" id="msj" placeholder="メッセージを入力してください...">
     <input type="submit" id="btn" value="送信">
     </form>
-		<button type="button" class="btn btn-default" id ="btn_1">Default</button>
+
+		<button type="button active" id = "btn_1" class="btn btn-default">Default</button>
+
+
 
  </div>
  <section id="inner-description" class="section inner-description">

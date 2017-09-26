@@ -52,7 +52,8 @@ io.on('connection', function(socket) {
 	socket.on('btn1', function() {
 		//io.sockets.in(channel).emit('message', msj, socket.id);
 		console.log("btn1");
-
+		io.sockets.emit("S_to_C_img_1", {
+		});
 
 
 	});
