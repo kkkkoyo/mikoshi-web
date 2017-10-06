@@ -16,7 +16,7 @@ app.get('/', function(req, res) {
 //nodeからcss呼び出し
 app.use('/css', express.static('css'));
 //nodeからimg呼び出し
-app.use('/img', express.static('img'));
+app.use('/images', express.static('images'));
 app.use('/js', express.static('js'));
 app.use('/php', express.static('php'));
 
@@ -49,10 +49,11 @@ io.on('connection', function(socket) {
 		});
 
 	});
-	socket.on('btn1', function() {
+	socket.on('btn', function(num) {
 		//io.sockets.in(channel).emit('message', msj, socket.id);
-		console.log("btn1");
-		io.sockets.emit("S_to_C_img_1", {
+		console.log("img_"+num);
+		io.sockets.emit("S_to_C_img", {
+			value:num
 		});
 
 
