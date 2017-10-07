@@ -53,6 +53,9 @@
 	#header .header-content {
 		 padding: 45px 0;
 	}
+  .navbar-nav {
+    margin-top: 45px;
+  }
 	.banner
 	{
 	min-height:100%!important;	
