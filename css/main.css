@@ -254,7 +254,7 @@ ul li {
 	transition-property: transform;
 }
 .nav-toggle:before {
-	background-color: #4b1685;
+	background-color: #2878ff;
 	-moz-transform: scale(1);
 	-ms-transform: scale(1);
 	-webkit-transform: scale(1);
@@ -265,7 +265,7 @@ ul li {
 	transition-duration: 0.3s;
 }
 .nav-toggle:after {
-	background-color: #4b1685;
+	background-color: #42cfff;
 	-moz-transform: scale(0);
 	-ms-transform: scale(0);
 	-webkit-transform: scale(0);
@@ -400,16 +400,53 @@ ul li {
 		text-align: center;
 }
 .swipeshow img{
-    width: 300px;
-    height: 300px;
+    width: auto;
+    height: auto;
 		text-align: center;
+}
+.relative {
+    position: relative;
+}
+.absolute {
+    position: absolute;
+    bottom: 20px;
+    color: #fff;
+    background: rgba(200,200,200,.6);
+    width: 100%;
+    max-width: 600px;
+    padding: 1em 0;
+}
+.absolute p {
+		font-family: "Roboto Slab", sans-serif;
+		color: #ffffff;
+    margin: 0;
+    padding: 0 0.8em;
+    font-size: 150%;
+    text-align: center;
+}
+.rsample{
+    position:relative;
+    width:300px;
+}
+.rsample span{
+    position:absolute;
+    bottom:5px;
+    left:0px;
+    width:300px;
+    text-align:center;
+    color:#fff;
+    line-height:250%;
+    background-color:#000;
+    filter:alpha(opacity=80);
+    -moz-opacity: 0.8;
+    opacity: 0.8;
 }
 /* ------------------------------------------------------------------------------
 	Banner
 -------------------------------------------------------------------------------*/
 
 .banner {
-	background-color: #65349c;
+	background-color: #3bbcff;
 	min-height: 750px;
 }
 .banner-text {
@@ -626,7 +663,7 @@ ul li {
 -------------------------------------------------------------------------------*/
 
 .innerbanner {
-	background-color: #65349c;
+	background-color: #3bbcff;
 	min-height: 100%;
 }
 .innerbanner-text {
