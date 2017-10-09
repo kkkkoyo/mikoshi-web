@@ -376,6 +376,10 @@ ul li {
 	margin-bottom: 10%;
 	text-transform: none;
 }
+.services h6 {
+	text-align: center;
+	text-transform: none;
+}
 .services p {
 	color: #6c7279;
 	font-size: 13px;
