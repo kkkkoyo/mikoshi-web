@@ -2,11 +2,13 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var fs = require('fs');
 var POST = process.env.PORT || 8080;
 var userCnt = {
 		a : 0,
 		b : 0
 	}
+var json = JSON.parse(fs.readFileSync('./data/ngwords.json', 'utf8'));
 
 //ルートディレクトリにアクセスした時に動く処理
 app.get('/', function(req, res) {
@@ -41,13 +43,23 @@ io.on('connection', function(socket) {
 	//messageイベントで動く
 	//同じチャンネルの人にメッセージを送る
 	socket.on('message', function(msj) {
-		//io.sockets.in(channel).emit('message', msj, socket.id);
-		console.log(msj);
 
-		io.sockets.emit("S_to_C_message", {
-			value:msj
-		});
+		var isngwords = false;
 
+		for (let i = 0; i < json.data.length; i++) {
+			if (msj.match(json.data[i])){
+				isngwords = true;
+			}
+		}
+
+		if(isngwords){
+			io.emit('ngwords',msj);
+		}else{
+			console.log(msj);
+			io.sockets.emit("S_to_C_message", {
+				value:msj
+			});
+		}
 	});
 	socket.on('btn', function(num) {
 		//io.sockets.in(channel).emit('message', msj, socket.id);

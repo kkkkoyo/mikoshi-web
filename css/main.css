@@ -385,6 +385,28 @@ ul li {
 	font-size: 13px;
 	font-weight: 400;
 	margin-top: 7%;
+	text-align: center;
+
+}
+.contents h5 {
+	font-size: 21px;
+	text-align: center;
+	margin-top: 20%;
+	margin-bottom: 10%;
+	text-transform: none;
+}
+.contents p {
+	font-size: 15px;
+	text-align: center;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	text-transform: none;
+}
+.contents h6 {
+	text-align: center;
+	text-transform: none;
+	margin-right: 5%;
+	margin-left: 5%;
 }
 .services-content li a {
 	color: #6c7279;
@@ -397,7 +419,7 @@ ul li {
 	width:100%;
 	height:100%;
 	margin-bottom: 7%;
-	}
+}
 .swipeshow {
     width: 300px;
     height: 300px;
@@ -597,7 +619,7 @@ ul li {
 	Hire me
 -------------------------------------------------------------------------------*/
 .hireme {
-	background-color: #fafafa;
+	background-color: #f1f3fd;
 }
 .hireme h3 {
 	font-family: "Roboto", sans-serif;
@@ -688,11 +710,24 @@ ul li {
 /* ------------------------------------------------------------------------------
 	Inner description
 -------------------------------------------------------------------------------*/
+.inner-description  {
+	background-color: #f6f1e0;
+}
 .inner-description h1 {
-	color: #3d3d3d;
-	font-size: 23px;
-	font-weight: 700;
-	margin-top:55px;
+	font-size: 21px;
+	text-align: center;
+	text-shadow:3px 3px 2px #c6bebb;
+	font-weight: 300;
+	margin-bottom: 10%;
+	text-transform: none;
+}
+.inner-description h2 {
+	font-size: 21px;
+	text-align: center;
+	font-weight: 300;
+	margin-bottom: 10%;
+	text-transform: none;
+}
 }
 .inner-description p {
 	color: #3d3d3d;
@@ -706,7 +741,12 @@ width:150px;
 height:150px;
 border-radius:50%;
 }
-
+.inner-description p {
+	color: #3d3d3d;
+	font-size: 18px;
+	line-height: 33px;
+	font-weight: 400;
+}
 
 /* ------------------------------------------------------------------------------
 	Contact form

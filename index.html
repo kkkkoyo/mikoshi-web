@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="//code.jquery.com/jquery-1.11.1.js"></script>
+
 </head>
 
 <body>
@@ -36,6 +37,7 @@
 				<!-- メッセージがなければ終了 -->
 				if (mensaje === '') return false;
 
+
 				<!-- メッセージを送信 -->
 				socket.emit('message', mensaje);
 
@@ -54,12 +56,14 @@
 			});
 			<!-- チャンネルを変えた時の処理 -->
 			$('#channel').on('change', function() {
-				console.log("ate");
 				<!-- チャンネル変更する -->
 				//socket.emit('change channel', $('#channel').val());
 			});
 		});
-
+		socket.on('ngwords', function(msj) {
+				if(window.alert("「"+msj+"」の中にNGワードが含まれてます。。ブロックしました。")){
+				}
+		});
 		<!--ここで作ったイベント名でサーバーサイドの処理を紐付ける-->
 		socket.on('welcome', function() {
 			<!-- 取得したメッセージをulに追加 -->
@@ -173,6 +177,18 @@
 		</ul>
 	</div>
 </div>
+</section>
+
+<section id="services" class="section services">
+	<h5>3.Contents</h5>
+		<p><a class="btn btn-ins" href="https://www.instagram.com/explore/tags/sujo_mikoshi2017/" role="button">#sujo_mikoshi2017</a></p>
+	<p>神輿制作の様子は、画像共有SNS、インスタグラムの上記ハッシュタグ検索にて閲覧することができます。</p>
+	<div class="contents">
+		<h5>コンセプト</h5>
+	<img src="images/zu_1.jpg" alt="Mafolio">
+	<p>「見るもの」から「参加するもの」へ</p>
+	<h6>従来の展示物は見るだけの鑑賞物でした。このデジタル神輿は、スマートフォンからメッセージを送ったり、スタンプを送る行為によって、演出が変わってきます。見るものから、実際に想いを乗せるものに変わります。参加し、その共有する行為そのものを楽しむことができます。</h6>
+</div>
 
 </section>
 
@@ -180,11 +196,12 @@
 		<div class="container">
 			<h1>Member</h1>
 			<div class="col-md-3 col-md-offset-2 text-center">
-				<h1>新井 恒陽(4年)</h1>
+				<h2>新井 恒陽(4年)</h2>
 
 				<img src="images/1.jpg" alt="Mafolio">
 				<h5>Planning/programming (Web+Application)/design</h5>
-				<h6>つくるのすき。元桜泉祭実行委員 古市研究室所属</h6>
+				<h6>つくるのすき。</h6>
+				<h6>元桜泉祭実行委員 古市研究室所属</h6>
 				<h6>気軽にフォローください</h6>
 
 				<p> <a class="btn btn-ins" href="https://www.instagram.com/kkkkoyo/" role="button"><i class="fa fa-instagram left"></i>Instagram</a></p>
