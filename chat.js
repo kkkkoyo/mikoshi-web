@@ -54,6 +54,14 @@ io.on('connection', function(socket) {
 				throw err;
 			}
 		});
+
+		fs.readFile("data/out.txt", 'utf8', function (err, text) {
+		    console.log('text file!');
+		    console.log(text);
+		    console.log('error!?');
+		    console.log(err);
+		});
+
 		console.log(text);//TODO:ログ出力
 
 		if(isngwords){
