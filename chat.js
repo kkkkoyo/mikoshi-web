@@ -9,6 +9,11 @@ var userCnt = {
 		b : 0
 	}
 var json = JSON.parse(fs.readFileSync('./data/ngwords.json', 'utf8'));
+var path  = require('path');
+var iconv = require('iconv-lite');
+var date = require('date-utils');
+
+const dist  = path.join( process.env.PWD || process.cwd() , "data/send.csv")   // 書き出すファイルのパス
 
 //ルートディレクトリにアクセスした時に動く処理
 app.get('/', function(req, res) {
@@ -25,23 +30,7 @@ app.use('/php', express.static('php'));
 
 //socket.ioに接続された時に動く処理
 io.on('connection', function(socket) {
-	//接続時に振られた一意のIDをコンソールに表示
-	//console.log('%s さんが接続しました。', socket.id);
 
-	var channel = 'A';//デフォルトのチャンネル
-	//socket.join(channel);//Roomを初期化するらしい
-	//userCnt.a++;//アクセス時はデフォルトのチャンネルなので、そのユーザをカウント
-	//io.emit('user cnt', userCnt);//全ユーザ上のユーザ数を更新
-
-	//「ようこそ」と「ID」を自分の画面だけに表示
-	//socket.emit('welcome');
-	//socket.emit('get id', socket.id);
-
-	//接続時に同じチャンネルの人に入室を伝える
-	//socket.broadcast.to(channel).emit('message', socket.id + 'さんが入室しました！', 'system');
-
-	//messageイベントで動く
-	//同じチャンネルの人にメッセージを送る
 	socket.on('message', function(msj) {
 
 		var isngwords = false;
@@ -51,6 +40,21 @@ io.on('connection', function(socket) {
 				isngwords = true;
 			}
 		}
+
+		var dt = new Date();
+		var formatted = dt.toFormat("MM/DD HH24:MI:SS");
+
+		const text   = msj+":"+isngwords+":"+formatted+"\n";
+
+		let buf   = iconv.encode( text , "Shift_JIS" );
+
+		fs.appendFile("data/out.txt", buf, function (err) {
+			if(err){
+				throw err
+			}else{
+				console.log(text);
+			}
+		});
 
 		if(isngwords){
 			io.emit('ngwords',msj);
@@ -68,44 +72,8 @@ io.on('connection', function(socket) {
 			value:num
 		});
 
-
-	});
-	//接続が切れた時に動く
-	//接続が切れたIDを全員に表示
-	socket.on('disconnect', function(e) {
-		//console.log('%s さんが退室しました。', socket.id);
-		// if (channel === 'A') {
-		// 	userCnt.a--;
-		//
-		// } else {
-		// 	userCnt.b--;
-		// }
-		//アクティブユーザを更新
-		io.emit('user cnt', userCnt);
 	});
 
-	//チャンネルを変えた時に動く
-	//今いるチャンネルを出て、選択されたチャンネルに移動する
-	// socket.on('change channel', function(newChannel) {
-	// 	socket.broadcast.to(channel).emit('message', socket.id + 'さんが退室しました！', 'system');//ルーム内の自分以外
-	// 	if (newChannel === 'A') {
-	// 		++userCnt.a;
-	// 		if (userCnt.b > 0) {
-	// 			--userCnt.b;
-	// 		}
-	// 	} else {
-	// 		++userCnt.b;
-	// 		if (userCnt.a > 0) {
-	// 			--userCnt.a;
-	// 		}
-	// 	}
-	// 	io.emit('user cnt', userCnt);
-	// 	socket.leave(channel); //チャンネルを去る
-	// 	socket.join(newChannel); //選択された新しいチャンネルのルームに入る
-	// 	channel = newChannel; //今いるチャンネルを保存
-	// 	socket.emit('change channel', channel); //チャンネルを変えたこと自分に送信
-	// 	socket.broadcast.to(channel).emit('message', socket.id + 'さんが入室しました！', 'system');//ルーム内の自分以外
-	// });
 });
 
 //接続待ち状態になる
