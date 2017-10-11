@@ -50,8 +50,6 @@ io.on('connection', function(socket) {
 
 		fs.appendFile("data/out.txt", buf, function (err) {
 			if(err){
-				io.emit('ngwords',"エラーです");
-
 				console.log("エラーです");
 				throw err;
 			}
