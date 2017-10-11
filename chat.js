@@ -50,16 +50,17 @@ io.on('connection', function(socket) {
 
 		fs.appendFile("data/out.txt", buf, function (err) {
 			if(err){
-				throw err
-			}else{
-				console.log(text);
+				io.emit('ngwords',"エラーです");
+
+				console.log("エラーです");
+				throw err;
 			}
 		});
+		console.log(text);//TODO:ログ出力
 
 		if(isngwords){
 			io.emit('ngwords',msj);
 		}else{
-			console.log(msj);
 			io.sockets.emit("S_to_C_message", {
 				value:msj
 			});
