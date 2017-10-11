@@ -46,7 +46,7 @@ io.on('connection', function(socket) {
 
 		const text   = msj+":"+isngwords+":"+formatted+"\n";
 
-		let buf   = iconv.encode( text , "Shift_JIS" );
+		let buf   = iconv.encode( text , "utf-8" );
 
 		fs.appendFile("data/out.txt", buf, function (err) {
 			if(err){
@@ -55,7 +55,7 @@ io.on('connection', function(socket) {
 			}
 		});
 
-		fs.readFile("data/out.txt", 'utf8', function (err, text) {
+		fs.readFile("data/out.txt", 'utf-8', function (err, text) {
 		    console.log('text file!');
 		    console.log(text);
 		    console.log('error!?');
