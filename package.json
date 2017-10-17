@@ -13,7 +13,10 @@
   "author": "kkkkoyo",
   "license": "ISC",
   "dependencies": {
+    "csv": "^1.1.1",
+    "date-utils": "^1.2.21",
     "express": "^4.15.3",
+    "iconv-lite": "^0.4.19",
     "socket.io": "^2.0.3"
   }
 }

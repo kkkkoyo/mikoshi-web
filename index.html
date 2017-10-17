@@ -1,139 +1,270 @@
 <!DOCTYPE html>
 <html lang="ja">
+<html class="no-js" lang="">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>heroku</title>
-<style>
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-}
-body {
-	font-family: Verdana;
-}
-ul {
-	list-style-type: none;
-	padding: 20px;
-	background: #000;
-	color: white;
-}
-#controls {
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	padding: 20px;
-	display: block;
-	width: 100%;
-}
-#controls #msj {
-	float: left;
-	width: 78%;
-	display: block;
-	padding: 20px;
-	border-radius: 5px;
-}
-#controls #btn {
-	float: right;
-	width: 20%;
-	height: 57px;
-	display: block;
-	background: white;
-	border: 1px solid #aaa;
-	font-size: 1.4em;
-	border-radius: 5px;
-}
-#controls #channel {
-	display: block;
-	width: 100%;
-	font-size: 1.2em;
-	padding: 20px;
-	background: white;
-	margin-bottom: 10px;
-	height: 45px;
-}
-#info {
-	padding: 15px 10px;
-	background: #efefef;
-}
-#user_name p,
-#user_cnt p {
-	display: inline-block;
-}
-</style>
-<script src="/socket.io/socket.io.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.js"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>ousen_sj</title>
+	<link rel='stylesheet' href='css/jquery.swipeshow.css'>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/jquery.fancybox.css">
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/responsive.css">
+	<link rel="stylesheet" href="css/animate.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.1.js"></script>
+
 </head>
+
 <body>
-<script>
-<!-- サーバー側とつなぐため -->
-var socket = io();
 
-$(function() {
-	<!-- 送信されたときの処理  -->
-	$('form').submit(function() {
-		<!-- メッセージを取得 -->
-		var mensaje = $('#msj').val();
+	<script>
+		<!-- サーバー側とつなぐため -->
+		var socket = io();
 
-		<!-- メッセージがなければ終了 -->
-		if (mensaje === '') return false;
+		$(function() {
+			<!--Init -->
 
-		<!-- メッセージを送信 -->
-		socket.emit('message', mensaje);
+			$(".swipeshow").swipeshow();
 
-		<!-- メッセージの中身を空にしえフォーカスする -->
-		$('#msj').val('').focus();
-		return false;
-	});
+			<!-- 送信されたときの処理  -->
+			$('form').submit(function() {
+				<!-- メッセージを取得 -->
+				var mensaje = $('#msj').val();
 
-	<!-- チャンネルを変えた時の処理 -->
-	$('#channel').on('change', function() {
-		<!-- チャンネル変更する -->
-		//socket.emit('change channel', $('#channel').val());
-	});
-});
+				<!-- メッセージがなければ終了 -->
+				if (mensaje === '') return false;
 
-<!--ここで作ったイベント名でサーバーサイドの処理を紐付ける-->
-socket.on('welcome', function() {
-	<!-- 取得したメッセージをulに追加 -->
-	$('#message').append($('<li>').text('ようこそ！！'));
-});
 
-socket.on('user cnt', function(cnt) {
-	<!-- 取得したメッセージをulに追加 -->
-	$('#user_cnt p').html('').text("(A :" + cnt.a +"人) (B :" + cnt.b + "人)");
-});
+				<!-- メッセージを送信 -->
+				socket.emit('message', mensaje);
 
-socket.on('message', function(msj, id) {
-	<!-- 取得したメッセージをulに追加 -->
-	$('#message').append($('<li>').text(id + " : " + msj));
-});
+				<!-- メッセージの中身を空にしえフォーカスする -->
+				$('#msj').val('').focus();
+				return false;
+			});
+			$('#btn_1').click(function() {
+				socket.emit('btn',1);
+			});
+			$('#btn_2').click(function() {
+				socket.emit('btn',2);
+			});
+			$('#btn_3').click(function() {
+				socket.emit('btn',3);
+			});
+			<!-- チャンネルを変えた時の処理 -->
+			$('#channel').on('change', function() {
+				<!-- チャンネル変更する -->
+				//socket.emit('change channel', $('#channel').val());
+			});
+		});
+		socket.on('ngwords', function(msj) {
+				if(window.alert("「"+msj+"」の中にNGワードが含まれてます。。ブロックしました。")){
+				}
+		});
+		<!--ここで作ったイベント名でサーバーサイドの処理を紐付ける-->
+		socket.on('welcome', function() {
+			<!-- 取得したメッセージをulに追加 -->
+			$('#message').append($('<li>').text('ようこそ！！'));
+		});
 
-socket.on('change channel', function(channel) {
-	<!-- チャンネルが変わったことをメッセージで表示 -->
-	$('#message').html('').append($('<li>').text('「チャンネル' + channel + '」に変更されました!'));
-});
+		socket.on('user cnt', function(cnt) {
+			<!-- 取得したメッセージをulに追加 -->
+			$('#user_cnt p').html('').text("(A :" + cnt.a + "人) (B :" + cnt.b + "人)");
+		});
 
-socket.on('get id', function(id) {
-	<!-- チャンネルが変わったことをメッセージで表示 -->
-	$('#user_name p').html('').text(id);
-});
-</script>
-  <div id="info">
-    <div id="user_name">あなたのID&nbsp;:&nbsp;<p></p></div>
-    <div id="user_cnt">アクティブユーザ&nbsp;:&nbsp;<p></p></div>
-  </div>
-  <ul id="message"></ul>
-  <div id="controls">
-    <form action="">
-    <select name="channel" id="channel">
-      <option value="A">チャンネルA</option>
-      <option value="B">チャンネルB</option>
-    </select>
-    <input type="text" id="msj" placeholder="メッセージを入力してください...">
-    <input type="submit" id="btn" value="送信">
-    </form>
- </div>
+		socket.on('message', function(msj, id) {
+			<!-- 取得したメッセージをulに追加 -->
+			$('#message').append($('<li>').text(id + " : " + msj));
+		});
+
+		socket.on('change channel', function(channel) {
+			<!-- チャンネルが変わったことをメッセージで表示 -->
+			$('#message').html('').append($('<li>').text('「チャンネル' + channel + '」に変更されました!'));
+		});
+
+		socket.on('get id', function(id) {
+			<!-- チャンネルが変わったことをメッセージで表示 -->
+			$('#user_name p').html('').text(id);
+		});
+	</script>
+
+	<section class="banner" role="banner">
+		<header id="header">
+			<!-- navigation section  -->
+			<div class="header-content clearfix"> <a class="logo" href="#">sujo.jp</a>
+				<nav class="navigation" role="navigation">
+					<ul class="primary-nav">
+						<li><a href="#services">Message</a></li>
+						<li><a href="#inner-description">Member</a></li>
+						<li><a href="#hireme">Contact</a></li>
+					</ul>
+				</nav>
+				<a href="#" class="nav-toggle">Menu<span></span></a> </div>
+			<!-- navigation section  -->
+		</header>
+
+		<!-- banner text -->
+		<div class="container">
+			<div class="col-md-10 col-md-offset-1">
+				<div class="banner-text text-center">
+					<h1>数理情報工学科 神輿</h1>
+				</div>
+			</div>
+		</div>
+
+	</section>
+
+
+	<section id="services" class="section services">
+		<div class="container-fluid">
+			<!-- <img src="images/mikoshi.jpg" alt="Mafolio"> -->
+			<img src="images/mikoshi.gif" width="100" height="30" alt="GIFアニメーションです" border="0" align="center" hspace="10" vspace="10">
+			<div class="services-content">
+				<h5>1. メッセージを送る</h5>
+				<h6>※12文字以内, 絵文字非対応</h6>
+
+				<h6>下のフォームからメッセージを送ろう！　送ったメッセージは神輿に表示されるよ</h6>
+				<h6>「わっしょい」などの応援を送ってみよう</h6>
+				<ul id="message"></ul>
+				<p>
+					<div id="controls">
+						<form action="">
+							<input type="text" id="msj" maxlength=12 placeholder="メッセージを入力してください...">
+							<input type="submit" id="btn" value="送信">
+						</form>
+					</div>
+				</p>
+
+
+
+			</div>
+
+		</div>
+	</section>
+	<section id="services" class="section services">
+		<div class="container-fluid">
+	<h5>2. スタンプを送る</h5>
+	<h6>下のスタンプを選んで神輿に届けよう！</h6>
+	<h6>選んだスタンプは神輿に表示されるよ</h6>
+	<h6>左右にスワイプして選択しよう</h6>
+
+	<div class="swipeshow">
+		<ul class="slides">
+			<li class="slide" id="btn_1">
+					<a href="images/send.png" class="work-box">
+						<figure class="relative">
+							<figcaption class="absolute"><p>Clickで送信する</p></figcaption>
+							<img src="images/stamp_1.jpg" alt=""></a>
+						</figure>
+			</li>
+			<li class="slide" id="btn_2">
+				<a href="images/send.png" class="work-box">
+					<figure class="relative">
+						<figcaption class="absolute"><p>Clickで送信する</p></figcaption>
+						<img src="images/stamp_2.jpg" alt=""></a>
+					</figure>
+			</li>
+			<li class="slide" id="btn_3">
+				<a href="images/send.png" class="work-box">
+					<figure class="relative">
+						<img src="images/stamp_3.jpg" alt=""></a>
+						<figcaption class="absolute"><p>Clickで送信する</p></figcaption>
+					</figure>
+			</li>
+		</ul>
+	</div>
+</div>
+</section>
+
+<section id="services" class="section services">
+	<h5>3.Contents</h5>
+		<p><a class="btn btn-ins" href="https://www.instagram.com/explore/tags/sujo_mikoshi2017/" role="button">#sujo_mikoshi2017</a></p>
+	<p>神輿制作の様子は、画像共有SNS、インスタグラムの上記ハッシュタグ検索にて閲覧することができます。</p>
+	<div class="contents">
+		<h5>コンセプト</h5>
+	<img src="images/zu_1.jpg" alt="Mafolio">
+	<p>「見るもの」から「参加するもの」へ</p>
+	<h6>従来の展示物は見るだけの鑑賞物でした。このデジタル神輿は、スマートフォンからメッセージを送ったり、スタンプを送る行為によって、演出が変わってきます。見るものから、実際に想いを乗せるものに変わります。参加し、その共有する行為そのものを楽しむことができます。</h6>
+</div>
+
+</section>
+
+	<section id="inner-description" class="section inner-description">
+		<div class="container">
+			<h1>Member</h1>
+			<div class="col-md-3 col-md-offset-2 text-center">
+				<h2>新井 恒陽(4年)</h2>
+
+				<img src="images/1.jpg" alt="Mafolio">
+				<h5>Planning/programming (Web+Application)/design</h5>
+				<h6>元桜泉祭実行委員 古市研究室所属</h6>
+				<h6>気軽にフォローください</h6>
+
+				<p> <a class="btn btn-ins" href="https://www.instagram.com/kkkkoyo/" role="button"><i class="fa fa-instagram left"></i>Instagram</a></p>
+				<p><a class="btn btn-social btn-tw" href="https://twitter.com/mmkr_sg" role="button"><i class="fa fa-twitter left"></i> Twitter</a></p>
+			</div>
+			<!--
+			<div class="col-md-3 col-md-offset-2 text-center">
+				<h1>Masaki Sugawara(B4)</h1>
+
+				<img src="images/2.jpg" alt="Mafolio">
+				<h5>programming</h5>
+				<p><a class="btn btn-social btn-fb" href="#" role="button"><i class="fa fa-facebook left"></i> Facebook</a></p>
+			</div>
+
+			<div class="col-md-3 col-md-offset-2 text-center">
+				<h1>Ryota Morohashi(B2)</h1>
+
+				<img src="images/3.jpg" alt="Mafolio">
+				<h5>programming</h5>
+				<p><a class="btn btn-social btn-fb" href="#" role="button"><i class="fa fa-facebook left"></i> Facebook</a></p>
+				<p><a class="btn btn-social btn-tw" href="#" role="button"><i class="fa fa-twitter left"></i> Twitter</a></p>
+
+			</div>
+		-->
+		</div>
+	</section>
+
+	<section id="hireme" class="section hireme">
+		<div class="container">
+			<div class="col-md-8 col-md-offset-2 text-center">
+				<h3>Contact</h3>
+				<p>お問い合わせやご質問はこちらからお願いいたします。</p>
+
+				<a type="button" class="btn btn-comm" href="https://docs.google.com/forms/d/e/1FAIpQLScYYUyj7p6PZWvGKDVwq4P0Wq272AiAiOBAccI8DYIaVTPfig/viewform"><i class="fa fa-comments left" ></i> Comments</a>
+			</div>
+	</section>
+	<!-- hire me section -->
+	<!-- footer -->
+	<footer class="section footer">
+		<div class="footer-bottom">
+			<div class="container">
+				<p>© 2017 Koyo Arai</p>
+			</div>
+		</div>
+	</footer>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.fancybox.pack.js"></script>
+	<script src="js/jquery.waypoints.min.js"></script>
+	<script src="js/retina.min.js"></script>
+	<script src="js/modernizr.js"></script>
+	<script src="js/main.js"></script>
+	<script src='js/jquery.swipeshow.js'></script>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-107695959-1', 'auto');
+	  ga('send', 'pageview');
+
+	</script>
 </body>
+
 </html>
