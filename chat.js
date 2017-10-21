@@ -12,6 +12,7 @@ var json = JSON.parse(fs.readFileSync('./data/ngwords.json', 'utf8'));
 var path  = require('path');
 var iconv = require('iconv-lite');
 var date = require('date-utils');
+var CronJob = require('cron').CronJob;
 
 const dist  = path.join( process.env.PWD || process.cwd() , "data/send.csv")   // 書き出すファイルのパス
 
@@ -30,6 +31,18 @@ app.use('/php', express.static('php'));
 
 //socket.ioに接続された時に動く処理
 io.on('connection', function(socket) {
+  //var notification_cnt = 0;
+  var msg;
+
+  var dt = new Date();
+  var formatted = dt.toFormat("MM/DD HH24:MI:SS");
+  console.log("start:"+formatted);
+
+  //schedule関数Call
+  dt.setMinutes(dt.getMinutes()+15);
+  console.log("debug line43: minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
+  var time = dt.getSeconds()+' '+ dt.getMinutes() +' '+ dt.getHours() +' * * 0-6';//s m h * * 1-5
+  schedule(time);
 
 	socket.on('message', function(msj) {
 
@@ -87,3 +100,30 @@ io.on('connection', function(socket) {
 http.listen(POST, function() {
 	console.log('接続開始：', POST);
 });
+
+function schedule(time){
+	new CronJob({
+        cronTime: time,
+        onTick: function() {		
+            	//メッセージはこの中に
+            	// if(notification_cnt > 0){
+            		var msg;
+            		var dt = new Date();
+        			var formatted = dt.toFormat("MM/DD HH24:MI:SS");
+            		console.log("0.5minutes:"+formatted);				
+					dt.setMinutes(dt.getMinutes()+15);
+					console.log("debug line114: minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
+					var time = dt.getSeconds()+' '+ dt.getMinutes() +' '+ dt.getHours() +' * * 0-6';//s m h * * 1-5
+					schedule(time);
+
+            		//メッセージ送信
+            		io.sockets.emit("S_to_C_message", {
+						value:msg
+					});
+            	// }
+            	//notification_cnt ++;
+        },
+        start: true,
+        //timeZone: 'Asia/Tokyo'
+  }); 	
+}
