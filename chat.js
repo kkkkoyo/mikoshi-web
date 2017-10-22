@@ -31,18 +31,29 @@ app.use('/php', express.static('php'));
 
 //socket.ioに接続された時に動く処理
 io.on('connection', function(socket) {
-  //var notification_cnt = 0;
   var msg;
 
   var dt = new Date();
   var formatted = dt.toFormat("MM/DD HH24:MI:SS");
+  
   console.log("start:"+formatted);
+  var min = dt.getMinutes();
+  
+  //-時0分、15分、30分、45分の中で直近の時刻をセットする
+  dt.setSeconds(0);
+  if(min <15){
+  	dt.setMinutes(15);
+  }else if(min < 30){//変更点
+  	dt.setMinutes(30);
+  }else if(min < 45){
+  	dt.setMinutes(45);
+  }else if(min < 60){
+  	dt.setHours(dt.getHours()+1);
+  	dt.setMinutes(0);
+  }
 
-  //schedule関数Call
-  dt.setMinutes(dt.getMinutes()+15);
-  console.log("debug line43: minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
-  var time = dt.getSeconds()+' '+ dt.getMinutes() +' '+ dt.getHours() +' * * 0-6';//s m h * * 1-5
-  schedule(time);
+  console.log("debug  : minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
+  schedule(dt);
 
 	socket.on('message', function(msj) {
 
@@ -101,29 +112,26 @@ http.listen(POST, function() {
 	console.log('接続開始：', POST);
 });
 
-function schedule(time){
+function schedule(date){
+	var dt = date;
+	var time = '0 '+ dt.getMinutes() +' '+ dt.getHours() +' * * 0-6';//s m h * * 1-5
 	new CronJob({
         cronTime: time,
-        onTick: function() {		
-            	//メッセージはこの中に
-            	// if(notification_cnt > 0){
-            		var msg;
-            		var dt = new Date();
-        			var formatted = dt.toFormat("MM/DD HH24:MI:SS");
-            		console.log("0.5minutes:"+formatted);				
-					dt.setMinutes(dt.getMinutes()+15);
-					console.log("debug line114: minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
-					var time = dt.getSeconds()+' '+ dt.getMinutes() +' '+ dt.getHours() +' * * 0-6';//s m h * * 1-5
-					schedule(time);
-
+        onTick: function() {
             		//メッセージ送信
+            		var msg;
+           			dt = new Date();
+        			var formatted = dt.toFormat("MM/DD HH24:MI:SS");
+            		console.log("0.5minutes:"+formatted);
             		io.sockets.emit("S_to_C_message", {
-						value:msg
+						value: dt.getMinutes()
 					});
-            	// }
-            	//notification_cnt ++;
+
+            		//タイマーセット
+					dt.setMinutes(dt.getMinutes()+15);
+					console.log("debug : minutes:"+dt.getMinutes()+"hours:" +dt.getHours());					
+					schedule(dt);					
         },
         start: true,
-        //timeZone: 'Asia/Tokyo'
   }); 	
 }
