@@ -12,6 +12,7 @@ var json = JSON.parse(fs.readFileSync('./data/ngwords.json', 'utf8'));
 var path  = require('path');
 var iconv = require('iconv-lite');
 var date = require('date-utils');
+var CronJob = require('cron').CronJob;
 
 const dist  = path.join( process.env.PWD || process.cwd() , "data/send.csv")   // 書き出すファイルのパス
 
@@ -28,8 +29,31 @@ app.use('/js', express.static('js'));
 app.use('/php', express.static('php'));
 
 
+var dt = new Date();
+var formatted = dt.toFormat("MM/DD HH24:MI:SS");
+
+console.log("start:"+formatted);
+var min = dt.getMinutes();
+
+//-時0分、15分、30分、45分の中で直近の時刻をセットする
+dt.setSeconds(0);
+if(min <15){
+	dt.setMinutes(15);
+}else if(min < 30){//変更点
+	dt.setMinutes(30);
+}else if(min < 45){
+	dt.setMinutes(45);
+}else if(min < 60){
+	dt.setHours(dt.getHours()+1);
+	dt.setMinutes(0);
+}
+
+console.log("debug  : minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
+schedule(dt);
+
 //socket.ioに接続された時に動く処理
 io.on('connection', function(socket) {
+  var msg;
 
 	socket.on('message', function(msj) {
 
@@ -87,3 +111,27 @@ io.on('connection', function(socket) {
 http.listen(POST, function() {
 	console.log('接続開始：', POST);
 });
+
+function schedule(date){
+	var dt = date;
+	var time = '0 '+ dt.getMinutes() +' '+ dt.getHours() +' * * 0-6';//s m h * * 1-5
+	new CronJob({
+        cronTime: time,
+        onTick: function() {
+            		//メッセージ送信
+            		var msg;
+           			dt = new Date();
+        			var formatted = dt.toFormat("MM/DD HH24:MI:SS");
+            		console.log("0.5minutes:"+formatted);
+            		io.sockets.emit("S_to_C_schedule", {
+						value: dt.getMinutes()
+					});
+
+            		//タイマーセット
+					dt.setMinutes(dt.getMinutes()+15);
+					console.log("debug : minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
+					schedule(dt);
+        },
+        start: true,
+  });
+}
