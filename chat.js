@@ -29,31 +29,31 @@ app.use('/js', express.static('js'));
 app.use('/php', express.static('php'));
 
 
+var dt = new Date();
+var formatted = dt.toFormat("MM/DD HH24:MI:SS");
+
+console.log("start:"+formatted);
+var min = dt.getMinutes();
+
+//-時0分、15分、30分、45分の中で直近の時刻をセットする
+dt.setSeconds(0);
+if(min <15){
+	dt.setMinutes(15);
+}else if(min < 30){//変更点
+	dt.setMinutes(30);
+}else if(min < 45){
+	dt.setMinutes(45);
+}else if(min < 60){
+	dt.setHours(dt.getHours()+1);
+	dt.setMinutes(0);
+}
+
+console.log("debug  : minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
+schedule(dt);
+
 //socket.ioに接続された時に動く処理
 io.on('connection', function(socket) {
   var msg;
-
-  var dt = new Date();
-  var formatted = dt.toFormat("MM/DD HH24:MI:SS");
-  
-  console.log("start:"+formatted);
-  var min = dt.getMinutes();
-  
-  //-時0分、15分、30分、45分の中で直近の時刻をセットする
-  dt.setSeconds(0);
-  if(min <15){
-  	dt.setMinutes(15);
-  }else if(min < 30){//変更点
-  	dt.setMinutes(30);
-  }else if(min < 45){
-  	dt.setMinutes(45);
-  }else if(min < 60){
-  	dt.setHours(dt.getHours()+1);
-  	dt.setMinutes(0);
-  }
-
-  console.log("debug  : minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
-  schedule(dt);
 
 	socket.on('message', function(msj) {
 
@@ -123,15 +123,15 @@ function schedule(date){
            			dt = new Date();
         			var formatted = dt.toFormat("MM/DD HH24:MI:SS");
             		console.log("0.5minutes:"+formatted);
-            		io.sockets.emit("S_to_C_message", {
+            		io.sockets.emit("S_to_C_schedule", {
 						value: dt.getMinutes()
 					});
 
             		//タイマーセット
 					dt.setMinutes(dt.getMinutes()+15);
-					console.log("debug : minutes:"+dt.getMinutes()+"hours:" +dt.getHours());					
-					schedule(dt);					
+					console.log("debug : minutes:"+dt.getMinutes()+"hours:" +dt.getHours());
+					schedule(dt);
         },
         start: true,
-  }); 	
+  });
 }
