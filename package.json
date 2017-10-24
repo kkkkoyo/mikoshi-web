@@ -13,6 +13,7 @@
   "author": "kkkkoyo",
   "license": "ISC",
   "dependencies": {
+    "cron": "^1.3.0",
     "csv": "^1.1.1",
     "date-utils": "^1.2.21",
     "express": "^4.15.3",
