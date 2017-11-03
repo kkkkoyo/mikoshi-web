@@ -89,7 +89,9 @@ io.on('connection', function(socket) {
 		console.log(text);//TODO:ログ出力
 
 		if(isngwords){
-			io.emit('ngwords',msj);
+			var socketID = socket.id;
+			io.to(socketID).emit('ngwords',msj);
+
 		}else{
 			io.sockets.emit("S_to_C_message", {
 				value:msj
