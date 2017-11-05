@@ -92,11 +92,17 @@ io.on('connection', function(socket) {
 			var socketID = socket.id;
 			io.to(socketID).emit('ngwords',msj);
 
-		}else{
-			io.sockets.emit("S_to_C_message", {
-				value:msj
-			});
+			var min = 0 ;
+			var max = 4 ;
+			var list = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+			var messageslist = ["数情最高!!!", "数情に投票する!", "すごすぎる!", "すてきっっ", "す、すげーー！"];
+
+			msj = messageslist[list];
 		}
+
+		io.sockets.emit("S_to_C_message", {
+			value:msj
+		});
 	});
 	socket.on('btn', function(num) {
 		//io.sockets.in(channel).emit('message', msj, socket.id);
